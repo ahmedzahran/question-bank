@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Categories</title>
+
+</head>
+<body>
+
+    <div class="card" layout:fragment="content">
+        <div class="card-header">
+            <h3 class="page-title d-inline">Create Category</h3>
+            <div class="float-right">
+                <a th:href="@{/categories/all}" class="btn btn-success">
+                    View Categories
+                </a>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-12">
+                    <form method="post" th:action="@{/categories/save}" th:object="${cat}" class="form fv-plugins-bootstrap fv-plugins-framework" >
+                        <div class="row justify-content-center">
+                            <input type="hidden" th:field="*{id}">
+                            <div class="col-12 col-lg-4 form-group">
+                                <label class="control-label">Category Name</label>
+                                <input  th:field="*{name}"  th:class="${#fields.hasErrors('name')} ? 'form-control is-invalid': 'form-control'" type="text" >
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}" th:errors="*{name}" >
+                                </div>
+                            </div>
+
+                            <div class="col-12 form-group text-center">
+                                <button type="submit" class="btn mt-auto  btn-danger">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

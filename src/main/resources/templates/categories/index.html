@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Categories</title>
+
+</head>
+<body>
+    <div class="card card-custom card-custom gutter-t" layout:fragment="content">
+        <div class="card-header py-3">
+            <div class="card-title">
+                <h3 class="card-label">Categories</h3>
+
+            </div>
+            <div class="card-toolbar">
+                <ul class="nav nav-tabs nav-bold">
+                    <li class="nav-item">
+                        <a class="btn btn-outline-success font-weight-bold btn-pill" th:href="@{/categories/create}">
+                            <i class="flaticon-plus"></i>
+                            Add new
+                        </a>
+                    </li>
+<!--                    <li class="nav-item dropdown">-->
+<!--                        <a class="nav-link dropdown-toggle " data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">-->
+<!--                            <span class="nav-icon">-->
+<!--                                <i class="flaticon-interface-6"></i>-->
+<!--                            </span>-->
+<!--                        </a>-->
+<!--                        <div class="dropdown-menu dropdown-menu-sm dropdown-menu-left" style="">-->
+<!--                            <a class="dropdown-item" data-toggle="tab" data-val="1" id="all" href="#kt_tab_pane_3_4" aria-expanded="true">All</a>-->
+<!--                            <a class="dropdown-item" data-toggle="tab" data-val="0" id="trash" href="#kt_tab_pane_3_4" aria-expanded="true">-->
+<!--                                trash-->
+<!--                            </a>-->
+<!--                        </div>-->
+<!--                    </li>-->
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="card-body ">
+            <div class="alert alert-success" role="alert" th:text="${success}" th:if="${success}"></div>
+            <div class="alert alert-danger" role="alert" th:text="${error}" th:if="${error}"></div>
+
+            <form class="kt-form kt-form--fit mb-15">
+                <div class="row mb-6">
+                    <div class="col-lg-3 mb-lg-0 mb-6">
+                        <label>Name</label>
+                        <input type="text" name="name" class="form-control datatable-input name"  data-col-index="0">
+                    </div>
+<!--                    <div class="col-lg-3 mb-lg-0 mb-6">-->
+<!--                        <label>date</label>-->
+<!--                        <div class="input-daterange input-group" id="kt_datepicker">-->
+<!--                            <input type="text" class="form-control datatable-input datepicker from" name="from" placeholder="From" data-col-index="5">-->
+<!--                            <div class="input-group-append">-->
+<!--                                <span class="input-group-text">-->
+<!--                                    <i class="la la-ellipsis-h"></i>-->
+<!--                                </span>-->
+<!--                            </div>-->
+<!--                            <input type="text" class="form-control datatable-input datepicker to" name="to" placeholder="To" data-col-index="5">-->
+<!--                        </div>-->
+<!--                    </div>-->
+                </div>
+                <div class="row mt-8">
+                    <div class="col-lg-12">
+                        <button class="btn btn-primary btn-primary--icon" id="kt_search">
+                            <span>
+                                <i class="la la-search"></i>
+                                <span>Search</span>
+                            </span>
+                        </button>&nbsp;&nbsp;
+                        <button class="btn btn-secondary btn-secondary--icon" id="kt_reset">
+                            <span>
+                                <i class="la la-close"></i>
+                                <span>Reset</span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <div id="kt_datatable2_wrapper"  class="dataTables_wrapper dt-bootstrap4 no-footer">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <table class="table table-separate  table-checkable dataTable no-footer dtr-inline" role="grid" aria-describedby="kt_datatable2_info" id="myTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Created At</th>
+                                    <th>Updated At</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="category : ${categories.getContent()}">
+                                    <td th:text="${category.id}"></td>
+                                    <td th:text="${category.name}"></td>
+                                    <td th:text="${#temporals.format(category.createdAt, 'dd-MM-yyyy HH:mm')}"></td>
+                                    <td th:text="${#temporals.format(category.updatedAt, 'dd-MM-yyyy HH:mm')}"></td>
+                                    <td>
+                                        <a th:href="@{/categories/edit/{id}(id=${category.id})}" class="btn btn-xs btn-info mb-1"><i class="flaticon2-edit"></i></a>
+                                        <a th:href="@{/categories/delete/{id}(id=${category.id})}"  class="btn btn-xs btn-danger delete_warning text-white mb-1" style="cursor:pointer;">
+                                            <i class="fa fa-trash"
+                                               data-toggle="tooltip"
+                                               data-placement="top" title=""
+                                               data-original-title="Warning"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="row">
+                            <div class="col-sm-12 col-md-5">
+                                <div class="dataTables_info" id="kt_datatable2_info" role="status" aria-live="polite">Showing [[${categories.number+1}]] to [[${categories.totalPages}]] of [[${categories.totalElements}]] entries</div>
+                            </div>
+                            <div class="col-sm-12 col-md-7">
+                                <div class="dataTables_paginate paging_simple_numbers" id="kt_datatable2_paginate">
+                                    <ul class="pagination">
+
+                                        <li class="paginate_button page-item previous"  th:classappend="${categories.number eq 0} ? 'disabled'" id="kt_datatable2_previous">
+                                            <a th:href="@{/categories/all?page={id}(id=${categories.number lt 2 ? 1 : categories.number})}"
+                                               aria-controls="kt_datatable2"
+                                               data-dt-idx="0" tabindex="0" class="page-link">
+                                                <i class="ki ki-arrow-back"></i>
+                                            </a>
+                                        </li>
+
+                                        <li class="paginate_button page-item" th:classappend="${i eq categories.number + 1} ? 'active'" th:each="i : ${#numbers.sequence( categories.number + 1, categories.totalPages > 10 + categories.number ? categories.number + 10 : categories.totalPages, 1)}">
+                                            <a th:href="@{/categories/all?page={id}(id=${i})}" th:text="${i}" aria-controls="kt_datatable2" data-dt-idx="1" tabindex="0" class="page-link">1</a>
+                                        </li>
+
+                                        <li class="paginate_button page-item next" th:classappend="${categories.number + 1 eq categories.totalPages} ? 'disabled'" id="kt_datatable2_next">
+                                            <a th:href="@{/categories/all?page={id}(id=${categories.number + 2})}" aria-controls="kt_datatable2" data-dt-idx="6" tabindex="0" class="page-link">
+                                                <i class="ki ki-arrow-next"></i>
+                                            </a>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
